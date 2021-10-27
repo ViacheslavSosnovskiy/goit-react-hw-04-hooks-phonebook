@@ -1,0 +1,32 @@
+/* @import "./styles/shared.scss";
+
+// без SASS_PATH делали пути так
+// ../../styles/shared.scss */
+
+.label {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.input {
+  background-color: rgb(165, 231, 252);
+  border: 2px solid black;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.button {
+  width: 150px;
+  padding: 6px;
+  background-color: #b9e96c;
+  border: 2px solid black;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.button:hover {
+  transition: linear 250ms;
+  transform: scale(1.06);
+  background-color: rgb(129, 243, 63);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+}
