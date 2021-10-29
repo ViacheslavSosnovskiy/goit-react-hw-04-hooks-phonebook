@@ -1,35 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ContactForm from "./ContactForm";
 import Filter from "./Filter";
 import ContactList from "./ContactList";
-import Modal from "./Modal";
-import IconButton from "./IconButton";
+// import Modal from "./Modal";
+// import IconButton from "./IconButton";
 
 import s from "./App.module.css";
 
-// ========== ID =========== //
+// ====== tostify =======
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// ========== ID ===========
 import { v4 as uuidv4 } from "uuid";
 // import shortid from "shortid";
 
-import { ReactComponent as AddContact } from "./icons/user-plus.svg";
-import { ReactComponent as Cross } from "./icons/cross.svg";
-
+// ===== REACT_ICONS =======
+// import { ImUserPlus, ImCancelCircle } from "react-icons/im";
+// ========= hooks =========
 import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
-  const [contacts, setContacts] = useLocalStorage(
-    [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-      { id: "id-5", name: "Kate Yeland", number: "234-01-29" },
-      { id: "id-6", name: "Olex Bond", number: "456-87-54" },
-    ],
-    ""
-  );
+  const [contacts, setContacts] = useLocalStorage("contacts", "");
   const [filter, setFilter] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
 
   const addContact = ({ name, number }) => {
     const person = {
@@ -38,84 +32,70 @@ function App() {
       number,
     };
 
-    if (
-      contacts.some(
-        (contact) => contact.name.toLowerCase() === person.name.toLowerCase()
-      )
-    ) {
-      alert("This contact is already exist!! Try one more time, please!");
+    if (contacts.some((contact) => contact.name === person.name)) {
+      toast.error("This contact is already exist ! Try one more time, please!");
       return;
     }
 
-    setContacts((prevState) => ({
-      contacts: [person, ...prevState.contacts],
-    }));
-
-    // закрытие модалки по сабмиту формы
-    // this.toggleModal();
+    setContacts((prevState) => [...prevState, ...person]);
   };
 
   const deleteContact = (id) => {
-    setContacts((prevState) => ({
-      contacts: prevState.contacts.filter((contact) => contact.id !== id),
-    }));
+    setContacts(contacts.filter((contact) => contact.id !== id));
   };
 
   const changeFilter = (e) => {
-    this.setState({ filter: e.currentTarget.value });
+    setFilter(e.currentTarget.value);
   };
 
   const getVisibleContacts = () => {
-    const normalizedFilter = this.state.filter.toLowerCase();
+    const normalizedFilter = filter.toLowerCase();
 
-    return this.state.contacts.filter((contact) =>
+    return contacts.filter((contact) =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
-  const toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
+  // const toggleModal = () => {
+  //   setShowModal(!showModal);
+  // };
 
-  const visibleContacts = this.getVisibleContacts();
+  const visibleContacts = getVisibleContacts();
 
   return (
     <div className={s.container}>
-      <IconButton onClick={this.toggleModal} aria-label="добавить контакт">
-        <AddContact width="20" height="20" fill="white" />
-      </IconButton>
+      <h2>Add contacts</h2>
+      <ContactForm onSubmit={addContact} />
+      {/* <IconButton onClick={toggleModal} aria-label="добавить контакт">
+        <ImUserPlus width="20" height="20" fill="white" />
+      </IconButton> */}
       <h1>Phonebook</h1>
 
       <h2>Contacts</h2>
-      <Filter value={this.state.filter} onChange={this.changeFilter} />
+      <Filter value={filter} onChange={changeFilter} />
       <div className={s.wrapper}>
         <ContactList
           contacts={visibleContacts}
-          onDeleteContact={this.deleteContact}
+          onDeleteContact={deleteContact}
         />
       </div>
-      <div>
-        {this.state.showModal && (
-          <Modal onClose={this.toggleModal}>
-            <IconButton onClick={this.toggleModal}>
-              <Cross width="20" height="20" fill="white" />
+      {/* <div>
+        {showModal && (
+          <Modal onClose={toggleModal}>
+            <IconButton onClick={toggleModal}>
+              <ImCancelCircle width="20" height="20" fill="white" />
             </IconButton>
-            <div>
-              <h2>Add contacts</h2>
-              <ContactForm onSubmit={this.addContact} />
-            </div>
           </Modal>
         )}
-      </div>
+      </div> */}
+      <ToastContainer autoClose={4000} />
     </div>
   );
 }
 
 export default App;
 
-// ========================= old    ==============
+// =================    old    ================
 // import React, { Component } from "react";
 // import ContactForm from "./ContactForm";
 // import Filter from "./Filter";

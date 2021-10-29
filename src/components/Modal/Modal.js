@@ -1,15 +1,13 @@
-import { Component } from "react";
+import { PureComponent } from "react";
 import s from "./modal.module.css";
 import { createPortal } from "react-dom";
 
 const modalRoot = document.getElementById("modal--root");
 
-class Modal extends Component {
+class Modal extends PureComponent {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown);
   }
-
-  //   componentDidUpdate() {}
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown);
@@ -17,15 +15,11 @@ class Modal extends Component {
 
   handleKeyDown = (e) => {
     if (e.code === "Escape") {
-      console.log("нажали на ESC");
       this.props.onClose();
     }
   };
 
   handleBackdropClick = (e) => {
-    console.log("currentTarget", e.currentTarget);
-    console.log("target", e.target);
-
     if (e.currentTarget === e.target) {
       this.props.onClose();
     }
